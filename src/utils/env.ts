@@ -1,4 +1,8 @@
 import dotenv from "dotenv";
-dotenv.config();
+
+export const { NODE_ENV } = process.env;
+dotenv.config({
+  path: NODE_ENV === "development" ? ".env" : ".env.production",
+});
 
 export const { BOT_TOKEN, BOT_USERNAME } = process.env;

@@ -1,1 +1,1 @@
-export const firebaseCollectionPrefix = "_ton_trending_bot";
+export const firebaseCollectionPrefix = "_";
