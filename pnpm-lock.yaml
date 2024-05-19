@@ -20,6 +20,9 @@ importers:
       moment:
         specifier: ^2.29.4
         version: 2.29.4
+      moment-timezone:
+        specifier: ^0.5.45
+        version: 0.5.45
       ws:
         specifier: ^8.16.0
         version: 8.16.0
@@ -900,6 +903,9 @@ packages:
 
   minimist@1.2.8:
     resolution: {integrity: sha512-2yyAR8qBkN3YuheJanUpWC5U3bb5osDywNB8RzDVlDwDHbocAJveqqj1u8+SVD7jkWT4yvsHCpWqqWqAxb0zCA==}
+
+  moment-timezone@0.5.45:
+    resolution: {integrity: sha512-HIWmqA86KcmCAhnMAN0wuDOARV/525R2+lOLotuGFzn4HO+FH+/645z2wx0Dt3iDv6/p61SIvKnDstISainhLQ==}
 
   moment@2.29.4:
     resolution: {integrity: sha512-5LC9SOxjSc2HF6vO2CyuTDNivEdoz2IvyJJGj6X8DJ0eFyfszE0QiEd+iXmBvUP3WHxSjFH/vIsA0EN00cgr8w==}
@@ -2305,6 +2311,10 @@ snapshots:
       brace-expansion: 1.1.11
 
   minimist@1.2.8: {}
+
+  moment-timezone@0.5.45:
+    dependencies:
+      moment: 2.29.4
 
   moment@2.29.4: {}
 

@@ -1,5 +1,6 @@
+import moment from "moment-timezone";
 export function getNow() {
-  return new Date().toISOString();
+  return moment().tz("Asia/Kolkata").format("YYYY-MM-DD HH:mm:ss");
 }
 
 export function getNowTimestamp() {
