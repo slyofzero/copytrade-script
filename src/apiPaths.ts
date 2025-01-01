@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { getAddressTxns, getSwapData } from "./utils/web3";
 import { SwapTxnData } from "./types";
 import { userTxns } from "./vars/txns";
-import { errorHandler } from "./utils/handlers";
+import { errorHandler, log } from "./utils/handlers";
 
 export async function getProfileTxns(req: Request, res: Response) {
   const { username } = req.params;
@@ -11,6 +11,8 @@ export async function getProfileTxns(req: Request, res: Response) {
   if (!username) {
     return res.status(400).json({ message: "Missing username" });
   }
+
+  log(`Fetching transactions for ${username}`);
 
   const txns = userTxns[username] || [];
   const totalTxns = txns.length;
@@ -33,6 +35,8 @@ export async function addNewWallet(req: Request, res: Response) {
   if (!wallet || !username) {
     return res.status(400).json({ message: "Missing wallet or username" });
   }
+
+  log(`New wallet added: ${wallet} for ${username}`);
 
   try {
     (async () => {
