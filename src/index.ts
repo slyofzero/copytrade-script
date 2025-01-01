@@ -1,23 +1,34 @@
-import { Bot } from "grammy";
-import { initiateBotCommands, initiateCallbackQueries } from "./bot";
+import { configureWeb3 } from "./ethWeb3";
+import { PORT } from "./utils/env";
 import { log } from "./utils/handlers";
-import { BOT_TOKEN } from "./utils/env";
-
-export const teleBot = new Bot(BOT_TOKEN || "");
-log("Bot instance ready");
-
-// Check for new transfers at every 20 seconds
-const interval = 20;
+import { getProfileTxns } from "./utils/web3";
+import express from "express";
+import { userTxns } from "./vars/txns";
+import { syncUsers } from "./vars/users";
 
 (async function () {
-  teleBot.start();
-  log("Telegram bot setup");
-  initiateBotCommands();
-  initiateCallbackQueries();
+  configureWeb3();
+  await Promise.all([syncUsers()]);
+  getProfileTxns();
+  setInterval(async () => {
+    await getProfileTxns();
+  }, 60 * 60 * 1e3);
 
-  async function toRepeat() {
-    //
-    setTimeout(toRepeat, interval * 1e3);
-  }
-  await toRepeat();
+  const app = express();
+
+  app.get("/profile/:username", async (req, res) => {
+    const { username } = req.params;
+    try {
+      const profileTxns = userTxns[username] || {};
+      res.json(profileTxns);
+    } catch (error) {
+      res
+        .status(500)
+        .send(`Error fetching profile transactions for ${username}`);
+    }
+  });
+
+  app.listen(PORT, () => {
+    log(`Server is running on http://localhost:${PORT}`);
+  });
 })();

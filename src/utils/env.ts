@@ -5,4 +5,4 @@ dotenv.config({
   path: NODE_ENV === "development" ? ".env" : ".env.production",
 });
 
-export const { BOT_TOKEN, BOT_USERNAME } = process.env;
+export const { ETHERSCAN_API_KEY, PORT, FIREBASE_KEY } = process.env;
