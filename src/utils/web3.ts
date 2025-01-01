@@ -4,6 +4,7 @@ import { apiFetcher } from "./api";
 import { EtherscanTx, SwapTxnData, Tx } from "@/types";
 import { userTxns } from "@/vars/txns";
 import { users } from "@/vars/users";
+import { log } from "./handlers";
 
 export async function getTokenDetails(tokenAddress: string) {
   const tokenContract = new ethers.Contract(
@@ -95,6 +96,8 @@ export async function getSwapData(tx: Tx): Promise<SwapTxnData | false> {
 }
 
 export async function processProfileTxns() {
+  log("Processing profile transactions...");
+
   for (const user of users) {
     const { username, wallets } = user;
 
@@ -121,4 +124,6 @@ export async function processProfileTxns() {
 
     userTxns[username] = swaps;
   }
+
+  log("Profile transactions processed ✅");
 }

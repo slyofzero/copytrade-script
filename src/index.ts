@@ -4,7 +4,7 @@ import { log } from "./utils/handlers";
 import { processProfileTxns } from "./utils/web3";
 import express from "express";
 import { syncUsers } from "./vars/users";
-import { getNewWallet, getProfileTxns } from "./apiPaths";
+import { addNewWallet, getProfileTxns } from "./apiPaths";
 
 (async function () {
   configureWeb3();
@@ -15,11 +15,12 @@ import { getNewWallet, getProfileTxns } from "./apiPaths";
   }, 60 * 60 * 1e3);
 
   const app = express();
+  app.use(express.json());
 
   // @ts-expect-error ejjkhjk
   app.get("/profile/:username", getProfileTxns);
   // @ts-expect-error ejjkhjk
-  app.post("/newWallet", getNewWallet);
+  app.post("/newWallet", addNewWallet);
 
   app.listen(PORT, () => {
     log(`Server is running on http://localhost:${PORT}`);

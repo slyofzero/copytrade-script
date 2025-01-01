@@ -9,7 +9,7 @@ export async function getProfileTxns(req: Request, res: Response) {
   const { page = 1, size = 10 } = req.query;
 
   if (!username) {
-    return res.status(400).send("Missing username");
+    return res.status(400).json({ message: "Missing username" });
   }
 
   const txns = userTxns[username] || [];
@@ -27,38 +27,42 @@ export async function getProfileTxns(req: Request, res: Response) {
   });
 }
 
-export async function getNewWallet(req: Request, res: Response) {
+export async function addNewWallet(req: Request, res: Response) {
   const { wallet, username } = req.body;
 
   if (!wallet || !username) {
-    return res.status(400).send("Missing wallet or username");
+    return res.status(400).json({ message: "Missing wallet or username" });
   }
 
   try {
-    const txns = await getAddressTxns(wallet);
-    const swaps = (
-      await Promise.all(
-        txns.map(async (tx) => {
-          const swapData = await getSwapData(tx);
-          if (swapData) {
-            return { ...swapData, address: wallet };
-          }
-          return false;
-        })
-      )
-    ).filter((tx): tx is SwapTxnData & { address: string } => Boolean(tx));
+    (async () => {
+      const txns = await getAddressTxns(wallet);
+      const swaps = (
+        await Promise.all(
+          txns.map(async (tx) => {
+            const swapData = await getSwapData(tx);
+            if (swapData) {
+              return { ...swapData, address: wallet };
+            }
+            return false;
+          })
+        )
+      ).filter((tx): tx is SwapTxnData & { address: string } => Boolean(tx));
 
-    if (!userTxns[username]) {
-      userTxns[username] = [];
-    }
+      if (!userTxns[username]) {
+        userTxns[username] = [];
+      }
 
-    userTxns[username] = [...userTxns[username], ...swaps].sort(
-      (a, b) => b.timestamp - a.timestamp
-    );
+      userTxns[username] = [...userTxns[username], ...swaps].sort(
+        (a, b) => b.timestamp - a.timestamp
+      );
+    })();
 
-    return res.status(200).send("Wallet transactions added successfully");
+    return res
+      .status(200)
+      .json({ message: "Wallet transactions added successfully" });
   } catch (error) {
     errorHandler(error);
-    return res.status(500).send("Internal server error");
+    return res.status(500).json({ message: "Internal server error" });
   }
 }
