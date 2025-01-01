@@ -4,6 +4,7 @@ import { log } from "./utils/handlers";
 import { processProfileTxns } from "./utils/web3";
 import express from "express";
 import morgan from "morgan";
+import morganBody from "morgan-body";
 import { syncUsers } from "./vars/users";
 import { addNewWallet, getProfileTxns } from "./apiPaths";
 
@@ -18,6 +19,7 @@ import { addNewWallet, getProfileTxns } from "./apiPaths";
   const app = express();
   app.use(express.json());
   app.use(morgan("combined")); // Integrate Morgan
+  morganBody(app);
 
   // @ts-expect-error ejjkhjk
   app.get("/profile/:username", getProfileTxns);
