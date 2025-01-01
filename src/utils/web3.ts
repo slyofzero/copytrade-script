@@ -94,7 +94,7 @@ export async function getSwapData(tx: Tx): Promise<SwapTxnData | false> {
   return false;
 }
 
-export async function getProfileTxns() {
+export async function processProfileTxns() {
   for (const user of users) {
     const { username, wallets } = user;
 
