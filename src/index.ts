@@ -18,9 +18,21 @@ import { syncUsers } from "./vars/users";
 
   app.get("/profile/:username", async (req, res) => {
     const { username } = req.params;
+    const { page = 1, pageSize = 10 } = req.query;
+    const pageNumber = parseInt(page as string, 10);
+    const pageSizeNumber = parseInt(pageSize as string, 10);
+
     try {
-      const profileTxns = userTxns[username] || {};
-      res.json(profileTxns);
+      const profileTxns = userTxns[username] || [];
+      const start = (pageNumber - 1) * pageSizeNumber;
+      const end = start + pageSizeNumber;
+      const paginatedTxns = profileTxns.slice(start, end);
+
+      res.json({
+        transactions: paginatedTxns,
+        currentPage: pageNumber,
+        totalPages: Math.ceil(profileTxns.length / pageSizeNumber),
+      });
     } catch (error) {
       res
         .status(500)
