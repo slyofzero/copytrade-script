@@ -71,12 +71,16 @@ export async function getSwapData(tx: Tx): Promise<SwapTxnData | false> {
     let amountOut = ethers.formatUnits(amount0Out, token0Details.decimals);
     let tokenIn = token1Details.symbol;
     let tokenOut = token0Details.symbol;
+    let tokenInAddress = token1;
+    let tokenOutAddress = token0;
 
     if (amount0In && amount1Out) {
       amountIn = ethers.formatUnits(amount0In, token0Details.decimals);
       amountOut = ethers.formatUnits(amount1Out, token1Details.decimals);
       tokenIn = token0Details.symbol;
       tokenOut = token1Details.symbol;
+      tokenInAddress = token0;
+      tokenOutAddress = token1;
     }
 
     const data: SwapTxnData = {
@@ -87,6 +91,8 @@ export async function getSwapData(tx: Tx): Promise<SwapTxnData | false> {
       amountOut,
       action: tokenIn === "ETH" ? "buy" : tokenOut === "ETH" ? "sell" : "swap",
       timestamp: Number(tx.timeStamp) * 1000,
+      tokenInAddress,
+      tokenOutAddress,
     };
 
     return data;

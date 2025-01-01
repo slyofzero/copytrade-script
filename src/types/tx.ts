@@ -32,6 +32,8 @@ export interface SwapTxnData {
   tokenOut: any;
   amountIn: string;
   amountOut: string;
-  action: string;
+  action: "buy" | "sell" | "swap";
   timestamp: number;
+  tokenInAddress: string;
+  tokenOutAddress: string;
 }
